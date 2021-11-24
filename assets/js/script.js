@@ -95,7 +95,9 @@ var statusSelectEl = document.createElement("select");
 statusSelectEl.className = "select-status";
 statusSelectEl.setAttribute("name", "status-change");
 statusSelectEl.setAttribute("data-task-id", taskId);
+actionContainerEl.appendChild(statusSelectEl);
 
+// create status options
 var statusChoices = ["To Do", "In Progress", "Completed"];
 for (var i = 0; i < statusChoices.length; i++) {
     // create option element
@@ -103,11 +105,9 @@ for (var i = 0; i < statusChoices.length; i++) {
     statusOptionEl.textContent = statusChoices[i];
     statusOptionEl.setAttribute("value",statusChoices[i]);
 
-    // append to sleect
+    // append to select
     statusSelectEl.appendChild(statusOptionEl);
 }
-
-actionContainerEl.appendChild(statusSelectEl);
 
 return actionContainerEl;
  };
@@ -125,7 +125,7 @@ return actionContainerEl;
     document.querySelector("#save-task").textContent = "Add Task";
 }
 
-formEl.addEventListener("submit", taskFormHandler);
+
 
 // task button handler function
 var taskButtonHandler = function (event) {
@@ -151,10 +151,11 @@ var taskStatusChangeHandler = function(event) {
     console.log(event.target.value);
  // get the task item's id
  var taskId = event.target.getAttribute("data-task-id");
+ // find the parent task item based on the id
+var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
 // get the currently selected option's value and convert to lowercase
 var statusValue = event.target.value.toLowerCase()
-// find the parent task item based on the id
-var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
 
 if(statusValue === "to do") {
     tasksToDoEl.appendChild(taskSelected);
@@ -168,7 +169,7 @@ else if(statusValue === "completed") {
 };
 
 var editTask = function(taskId) {
-    console.log("editing task #" + taskId);
+    console.log(taskId);
     // get task list item element
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     
@@ -195,9 +196,11 @@ var deleteTask = function(taskId) {
     taskSelected.remove();
 };
 
-
-
+// Create a new task
+formEl.addEventListener("submit", taskFormHandler);
+// for edit and delete buttons
 pageContentEl.addEventListener("click", taskButtonHandler);
+// for changing the status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
 
 
